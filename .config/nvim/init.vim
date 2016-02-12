@@ -42,7 +42,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'jszakmeister/vim-togglecursor'
 Plug 'morhetz/gruvbox'
 Plug 'mhinz/vim-startify'
-" Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline'
 Plug 'osyo-manga/vim-anzu'
 Plug 'Lokaltog/vim-easymotion'
 Plug 'terryma/vim-multiple-cursors'
@@ -51,7 +51,6 @@ Plug 'PeterRincker/vim-argumentative'
 Plug 'Raimondi/delimitMate'
 Plug 'terryma/vim-expand-region'
 Plug 'ervandew/supertab'
-" Plug 'ctrlpvim/ctrlp.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'elzr/vim-json'
@@ -59,13 +58,9 @@ Plug 'junegunn/vim-easy-align'
 Plug 'mhinz/vim-signify'
 Plug 'pangloss/vim-javascript'
 Plug 'groenewege/vim-less'
-Plug 'rking/ag.vim'
 Plug 'benekastah/neomake'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'vifm/vifm.vim'
-" Plug 'Mizuchi/vim-ranger'
-" Plug 'scrooloose/nerdtree'
-" Plug 'scrooloose/nerdcommenter'
 Plug 'tomtom/tcomment_vim'
 Plug 'maxbrunsfeld/vim-yankstack'
 Plug 'tpope/vim-fugitive'
@@ -87,6 +82,8 @@ com! DiffSaved call s:DiffWithSaved()
 
 " Highlight columns after 80.
 let &colorcolumn=join(range(81,999),",")
+
+let g:vifm_exec_args = '-c "set tuioptions=p"'
 
 let g:signify_vcs_list = ['git']
 
@@ -144,9 +141,6 @@ let g:airline_symbols.readonly = ''
 " Make EditorConfig play nice with Fugitive
 let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 
-" Make Ag search from project root
-let g:ag_working_path_mode='r'
-
 let g:neomake_javascript_enabled_makers = ['eslint']
 let g:neomake_jsx_enabled_makers = ['eslint']
 
@@ -157,10 +151,6 @@ let g:neomake_javascript_eslint_exe = s:eslint_exe
 let g:neomake_jsx_eslint_exe = s:eslint_exe
 
 autocmd BufWritePost,BufEnter * :Neomake
-
-" let g:ctrlp_cmd = 'CtrlPMixed'
-" let g:ctrlp_line_prefix = ' '
-" let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
 
 map <space> <Plug>(easymotion-prefix)
 
@@ -227,12 +217,10 @@ cnoremap <Up>    <NOP>
 cnoremap <Down>  <NOP>
 
 " Common mistyped commands.
-ca W w
-ca Wq wq
-ca WQ wq
-ca Q q
-ca ag Ag
-ca AG Ag
+command W w
+command Wq wq
+command WQ wq
+command Q q
 
 function! s:fzf_statusline()
   " Override statusline as you like
@@ -246,25 +234,11 @@ autocmd! User FzfStatusLine call <SID>fzf_statusline()
 
 nnoremap <C-P> :<C-U>GitFiles<CR>
 
-function! s:RangerChooser()
-    let callback = {'tempname': tempname()}
-    function! callback.on_exit()
-        try
-            if filereadable(self.tempname)
-                let names = readfile(self.tempname)
-                exec 'edit ' . fnameescape(names[0])
-                for name in names[1:]
-                    exec 'tabe ' . fnameescape(name)
-                endfor
-            endif
-        endtry
-    endfunction
-    let cmd = 'ranger --choosefiles='.callback.tempname
-    call termopen(cmd, callback)
-    startinsert
-endfunction
-command! -bar RangerChooser call s:RangerChooser()
-nnoremap <C-\> :<C-U>RangerChooser<CR>
+nnoremap <C-\> :<C-U>vsplit \| EditVifm<CR>
+
+" JavaScript goodness
+autocmd FileType javascript inoremap (; ();<Esc>hi
+autocmd FileType javascript inoremap {<CR> {<CR>}<Esc><S-O>
 
 let g:terminal_color_0  = '#282828'
 " let g:terminal_color_1  = '#cc241d'
