@@ -27,6 +27,8 @@ set fillchars=vert:\
 set display+=lastline
 " Delete comment characters when joining lines.
 set formatoptions+=j
+" Disable highlighting very long lines for performance reasons.
+set synmaxcol=160
 " Update buffer when Vim thinks file contents might have changed from outside.
 set autoread
 " Wait a maximum of 100ms for key combos.
