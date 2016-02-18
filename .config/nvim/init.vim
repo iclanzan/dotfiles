@@ -33,7 +33,7 @@ set synmaxcol=160
 set autoread
 " Wait a maximum of 100ms for key combos.
 set ttimeout
-set ttimeoutlen=100
+set ttimeoutlen=0
 " Delay after typing before running commands to update stuff on screen.
 set updatetime=250
 " Do not restore options when restoring a session.
@@ -60,7 +60,9 @@ Plug 'junegunn/vim-easy-align'
 Plug 'mhinz/vim-signify'
 Plug 'pangloss/vim-javascript'
 Plug 'groenewege/vim-less'
-Plug 'benekastah/neomake'
+" Plug 'benekastah/neomake'
+" Using a fork until #291 gets fixed.
+Plug 'hauleth/neomake', { 'branch': 'fix/291' }
 Plug 'editorconfig/editorconfig-vim'
 Plug 'vifm/vifm.vim'
 Plug 'tomtom/tcomment_vim'
@@ -81,6 +83,29 @@ function! s:DiffWithSaved()
   exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
 endfunction
 com! DiffSaved call s:DiffWithSaved()
+
+function! s:RootDir()
+  let root = systemlist('git rev-parse --show-toplevel')[0]
+  return v:shell_error ? {} : {'dir': root}
+endfunction
+com! -nargs=* AgProj
+  \ call fzf#vim#ag(<q-args>, extend(s:RootDir(), g:fzf#vim#default_layout))
+
+function! s:ProjectFiles()
+  let root = systemlist('git rev-parse --show-toplevel')[0]
+  if v:shell_error
+    return s:warn('Not in git repo')
+  endif
+  return fzf#run(fzf#vim#wrap(extend({
+  \ 'source':  'git ls-files -oc --exclude-standard',
+  \ 'dir':     root,
+  \ 'options': '-m --prompt "Project> "'
+  \}, g:fzf#vim#default_layout)))
+endfunction
+com! ProjectFiles
+  \ call s:ProjectFiles()
+
+nnoremap <C-P> :<C-U>ProjectFiles<CR>
 
 " Highlight columns after 80.
 let &colorcolumn=join(range(81,999),",")
@@ -204,6 +229,14 @@ cnoremap <M-B> <S-Left>
 inoremap <M-F> <S-Right>
 cnoremap <M-F> <S-Right>
 
+" Map to NULL character, works with <S-Space>, <C-@>, etc.
+inoremap <NUL> <Esc>
+nnoremap <NUL> i
+
+" Remove search highlighting and fix sytax highlighting in addition to
+" redrawing the screen.
+nnoremap <C-L> :nohlsearch<CR>:diffupdate<CR>:syntax sync fromstart<CR><C-L>
+
 " Disable arrow keys to encourage faster movements.
 inoremap <Left>  <NOP>
 inoremap <Right> <NOP>
@@ -234,12 +267,12 @@ endfunction
 
 autocmd! User FzfStatusLine call <SID>fzf_statusline()
 
-nnoremap <C-P> :<C-U>GitFiles<CR>
-
 nnoremap <C-\> :<C-U>vsplit \| EditVifm<CR>
 
 " JavaScript goodness
 autocmd FileType javascript inoremap (; ();<Esc>hi
+autocmd FileType javascript inoremap {; {};<Esc>hi
+autocmd FileType javascript inoremap (<CR> (<CR>)<Esc><S-O>
 autocmd FileType javascript inoremap {<CR> {<CR>}<Esc><S-O>
 
 let g:terminal_color_0  = '#282828'
