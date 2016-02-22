@@ -60,9 +60,7 @@ Plug 'junegunn/vim-easy-align'
 Plug 'mhinz/vim-signify'
 Plug 'pangloss/vim-javascript'
 Plug 'groenewege/vim-less'
-" Plug 'benekastah/neomake'
-" Using a fork until #291 gets fixed.
-Plug 'hauleth/neomake', { 'branch': 'fix/291' }
+Plug 'benekastah/neomake'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'vifm/vifm.vim'
 Plug 'tomtom/tcomment_vim'
@@ -274,6 +272,8 @@ autocmd FileType javascript inoremap (; ();<Esc>hi
 autocmd FileType javascript inoremap {; {};<Esc>hi
 autocmd FileType javascript inoremap (<CR> (<CR>)<Esc><S-O>
 autocmd FileType javascript inoremap {<CR> {<CR>}<Esc><S-O>
+autocmd FileType javascript inoremap (;<CR> (<CR>);<Esc><S-O>
+autocmd FileType javascript inoremap {;<CR> {<CR>};<Esc><S-O>
 
 let g:terminal_color_0  = '#282828'
 " let g:terminal_color_1  = '#cc241d'
