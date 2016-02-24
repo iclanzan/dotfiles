@@ -104,6 +104,8 @@ com! ProjectFiles
   \ call s:ProjectFiles()
 
 nnoremap <C-P> :<C-U>ProjectFiles<CR>
+nnoremap <C-K> :<C-U>Buffers<CR>
+nnoremap <C-J> :<C-U>AgProj<Space>
 
 " Highlight columns after 80.
 let &colorcolumn=join(range(81,999),",")
@@ -229,11 +231,11 @@ cnoremap <M-F> <S-Right>
 
 " Map to NULL character, works with <S-Space>, <C-@>, etc.
 inoremap <NUL> <Esc>
+cnoremap <NUL> <Esc>
 nnoremap <NUL> i
 
-" Remove search highlighting and fix sytax highlighting in addition to
-" redrawing the screen.
-nnoremap <C-L> :nohlsearch<CR>:diffupdate<CR>:syntax sync fromstart<CR><C-L>
+" Remove search highlighting, reload file, fix sytax highlighting, redraw screen
+nnoremap <C-L> :nohlsearch<CR>:edit<CR>:diffupdate<CR>:syntax sync fromstart<CR><C-L>
 
 " Disable arrow keys to encourage faster movements.
 inoremap <Left>  <NOP>
