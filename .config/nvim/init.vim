@@ -39,6 +39,9 @@ set updatetime=250
 " Do not restore options when restoring a session.
 set sessionoptions-=options
 
+" Enable spell checker for markdown files
+autocmd FileType markdown setlocal spell
+
 call plug#begin('~/.vim/plugged')
 
 Plug 'jszakmeister/vim-togglecursor'
@@ -194,6 +197,10 @@ nmap * <Plug>(anzu-star-with-echo)
 nmap # <Plug>(anzu-sharp-with-echo)
 nmap <Esc><Esc> <Plug>(anzu-clear-search-status)
 
+" Next previous location (usually lines with errors)
+nmap ]l :lnext<CR>
+nmap [l :lprev<CR>
+
 " Copy file path
 nmap cp :let @* = expand("%:p")
 
@@ -233,6 +240,9 @@ cnoremap <M-F> <S-Right>
 inoremap <NUL> <Esc>
 cnoremap <NUL> <Esc>
 nnoremap <NUL> i
+
+" Escape insert mode with Ctrl-C, just like exiting command mode.
+inoremap <C-C> <Esc>
 
 " Remove search highlighting, reload file, fix sytax highlighting, redraw screen
 nnoremap <C-L> :nohlsearch<CR>:edit<CR>:diffupdate<CR>:syntax sync fromstart<CR><C-L>
