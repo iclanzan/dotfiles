@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 declare -ra TAPS=(
   'neovim/neovim'
 )
@@ -98,3 +100,5 @@ for i in "${CASKS[@]}"
 do
   installCask "$i"
 done
+
+git clone --separate-git-dir=~/.dotfiles "$1" ~
