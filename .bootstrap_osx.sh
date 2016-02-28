@@ -1,6 +1,10 @@
 #!/bin/bash
 
+# Exit if any command fails
 set -e
+
+# In non-interactive shells aliases are not expanded without this
+shopt -s expand_aliases
 
 declare -ra TAPS=(
   'neovim/neovim'
@@ -101,4 +105,8 @@ do
   installCask "$i"
 done
 
-git clone --separate-git-dir=~/.dotfiles "$1" ~
+printInfo "Cloning dotfiles from $1"
+git clone --bare "$1" "$HOME/.dotfiles"
+alias dotfiles='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
+dotfiles config --local status.showUntrackedFiles no
+dotfiles checkout
