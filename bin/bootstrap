@@ -47,7 +47,7 @@ printError() {
   printf "${RED}$1${NC}\n" 1>&2;
 }
 
-printWarn() {
+printWarning() {
   printf "${YELLOW}$1${NC}\n" 1>&2;
 }
 
@@ -113,8 +113,17 @@ do
   installCask "$i"
 done
 
-printInfo "Cloning dotfiles from $1"
-git clone --bare "$1" "$HOME/.dotfiles"
 alias dotfiles='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
-dotfiles config --local status.showUntrackedFiles no
-dotfiles checkout
+if [ -d "$HOME/.dotfiles" ]; then
+  printInfo "Updating dotfiles from $(dotfiles config --get remote.origin.url)"
+  dotfiles pull
+else
+  if [ -z "$1" ]; then
+    printWarning 'No dotfiles repository was provided.'
+  else
+    printInfo "Cloning dotfiles from $1"
+    git clone --bare "$1" "$HOME/.dotfiles"
+    dotfiles config --local status.showUntrackedFiles no
+    dotfiles checkout
+  fi
+fi
