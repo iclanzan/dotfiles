@@ -100,7 +100,7 @@ fi
 
 for i in "${TAPS[@]}"
 do
-  brew tap "$i"
+  brew tap "$i" 2> /dev/null
 done
 
 brew update
