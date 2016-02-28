@@ -7,6 +7,7 @@ set -e
 shopt -s expand_aliases
 
 declare -ra TAPS=(
+  'caskroom/versions'
   'neovim/neovim'
 )
 
@@ -23,7 +24,14 @@ declare -ra FORMULAE=(
 
 declare -ra CASKS=(
   'firefox'
+  'gimp'
   'google-chrome'
+  'iterm-beta'
+  'keka'
+  'skype'
+  'spectacle'
+  'telegram'
+  'transmission'
   'vlc'
   'virtualbox'
 )
