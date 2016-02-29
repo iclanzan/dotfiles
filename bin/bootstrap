@@ -129,3 +129,9 @@ else
     dotfiles checkout
   fi
 fi
+
+itermSettingsFile="$HOME/.config/iterm2/com.googlecode.iterm2.plist"
+if [ -f itermSettingsFile ]; then
+  printInfo "Importing iTerm2 settings."
+  defaults write com.googlecode.iterm2 "$(cat $itermSettingsFile)"
+fi
