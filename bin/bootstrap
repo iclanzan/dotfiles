@@ -21,6 +21,7 @@ declare -ra FORMULAE=(
   'nvm'
   'the_silver_searcher'
   'vifm'
+  'youtube-dl'
 )
 
 declare -ra CASKS=(
@@ -36,6 +37,12 @@ declare -ra CASKS=(
   'transmission'
   'vlc'
   'virtualbox'
+)
+
+declare -ra NPM_PACKAGES=(
+  'how2'
+  'speed-test'
+  'vtop'
 )
 
 declare -xr RED='\033[0;31m'
@@ -114,6 +121,23 @@ for i in "${CASKS[@]}"
 do
   installCask "$i"
 done
+
+if [ -z "$NVM_DIR" ]; then
+  NVM_DIR="$HOME/.nvm"
+fi
+NVM_SH="$NVM_DIR/nvm.sh"
+
+type nvm &>/dev/null
+if [ $? -ne 0 ] && [ -s "$NVM_SH" ]; then
+  printInfo 'Loading nvm'
+  source "$NVM_SH"
+fi
+
+printInfo 'Installing latest version of Node'
+nvm install stable --reinstall-packages-from=stable
+
+printInfo 'Installing/updating npm packages'
+npm install -g "${NPM_PACKAGES[@]}"
 
 alias dotfiles='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
 if [ -d "$HOME/.dotfiles" ]; then
