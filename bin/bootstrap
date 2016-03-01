@@ -18,7 +18,6 @@ declare -ra FORMULAE=(
   'fzf'
   'mutt'
   'neovim'
-  'nvm'
   'the_silver_searcher'
   'vifm'
   'youtube-dl'
@@ -87,15 +86,18 @@ isCaskInstalled() {
 installOrUpgradeFormula() {
   if isFormulaInstalled "$1"; then
     if isFormulaOutdated "$1"; then
+      printInfo "Upgrading $1"
       brew upgrade "$@"
     fi
   else
+    printInfo "Installing $1"
     brew install "$@"
   fi
 }
 
 installCask() {
   if ! isCaskInstalled "$1"; then
+    printInfo "Installing $1"
     brew cask install "$@"
   fi
 }
@@ -110,6 +112,7 @@ do
   brew tap "$i" 2> /dev/null
 done
 
+printInfo 'Updating Homebrew'
 brew update
 
 for i in "${FORMULAE[@]}"
@@ -127,11 +130,17 @@ if [ -z "$NVM_DIR" ]; then
 fi
 NVM_SH="$NVM_DIR/nvm.sh"
 
-type nvm &>/dev/null
-if [ $? -ne 0 ] && [ -s "$NVM_SH" ]; then
-  printInfo 'Loading nvm'
-  source "$NVM_SH"
+if [ -d "$NVM_DIR" ]; then
+  printInfo 'Updating nvm'
+  git -C "$NVM_DIR" pull origin master
+else
+  printInfo 'Installing nvm'
+  git clone https://github.com/creationix/nvm.git "$NVM_DIR"
 fi
+git -C "$NVM_DIR" checkout "$(git describe -C "$NVM_DIR" --abbrev=0 --tags)"
+
+printInfo 'Loading nvm'
+source "$NVM_SH"
 
 printInfo 'Installing latest version of Node'
 nvm install stable --reinstall-packages-from=stable
@@ -157,5 +166,5 @@ fi
 itermSettingsFile="$HOME/.config/iterm2/com.googlecode.iterm2.plist"
 if [ -f "$itermSettingsFile" ]; then
   printInfo "Importing iTerm2 settings."
-  defaults write com.googlecode.iterm2 "$(cat $itermSettingsFile)"
+  defaults write com.googlecode.iterm2 "$(cat "$itermSettingsFile")"
 fi
