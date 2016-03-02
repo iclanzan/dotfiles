@@ -143,7 +143,7 @@ else
   printInfo 'Installing nvm'
   git clone https://github.com/creationix/nvm.git "$NVM_DIR"
 fi
-git -C "$NVM_DIR" checkout "$(git describe -C "$NVM_DIR" --abbrev=0 --tags)"
+git -C "$NVM_DIR" checkout "$(git -C "$NVM_DIR" describe --abbrev=0 --tags)"
 
 printInfo 'Loading nvm'
 source "$NVM_SH"
