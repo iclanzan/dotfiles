@@ -5,6 +5,9 @@ set background=dark
 " Highlight current line
 set cursorline
 set autoindent
+set expandtab
+set shiftwidth=2
+set softtabstop=2
 set nowrap
 set smarttab
 set nrformats-=octal
@@ -77,7 +80,7 @@ Plug 'tomtom/tcomment_vim'
 Plug 'maxbrunsfeld/vim-yankstack'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
-Plug 'Yggdroot/indentLine'
+" Plug 'Yggdroot/indentLine'
 Plug 'mxw/vim-jsx'
 Plug 'junegunn/goyo.vim'
 
@@ -190,6 +193,9 @@ let g:neomake_jsx_eslint_exe = s:eslint_exe
 autocmd BufWritePost,BufEnter * :Neomake
 
 map <space> <Plug>(easymotion-prefix)
+
+" Toggle between windows with Tab
+map <Tab> <C-W>W
 
 let mapleader=","
 
