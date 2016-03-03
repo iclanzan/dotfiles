@@ -28,8 +28,12 @@ set sidescrolloff=1
 set fillchars="vert: "
 " Display long lines
 set display+=lastline
+" Don’t break in the middle of words when wrapping long lines
+set linebreak
 " Delete comment characters when joining lines.
 set formatoptions+=j
+" Highlight column 81.
+set colorcolumn=81
 " Disable highlighting very long lines for performance reasons.
 set synmaxcol=160
 " Update buffer when Vim thinks file contents might have changed from outside.
@@ -47,6 +51,9 @@ autocmd FileType markdown setlocal spell
 
 " Enable line wrapping for markdown files
 autocmd FileType markdown setlocal wrap
+
+" Disable column color in markdown files
+autocmd FileType markdown setlocal colorcolumn=""
 
 " Autoinstall vim-plug
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
@@ -122,9 +129,6 @@ com! ProjectFiles
 nnoremap <C-P> :<C-U>ProjectFiles<CR>
 nnoremap <C-K> :<C-U>Buffers<CR>
 nnoremap <C-J> :<C-U>AgProj<Space>
-
-" Highlight columns after 80.
-let &colorcolumn=join(range(81,999),",")
 
 let g:vifm_exec_args = '-c "set tuioptions=p"'
 
