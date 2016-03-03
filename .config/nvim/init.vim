@@ -25,7 +25,7 @@ set sidescroll=1
 " Start scrolling horizontally when 1 column away from the edge.
 set sidescrolloff=1
 " Character displayed between vertical window splits
-set fillchars=vert:\ 
+set fillchars="vert: "
 " Display long lines
 set display+=lastline
 " Delete comment characters when joining lines.
@@ -44,6 +44,9 @@ set sessionoptions-=options
 
 " Enable spell checker for markdown files
 autocmd FileType markdown setlocal spell
+
+" Enable line wrapping for markdown files
+autocmd FileType markdown setlocal wrap
 
 " Autoinstall vim-plug
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
