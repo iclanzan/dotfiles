@@ -2,8 +2,6 @@ set number
 set relativenumber
 " Let themes know we are using a dark background
 set background=dark
-" Highlight current line
-set cursorline
 set autoindent
 set expandtab
 set shiftwidth=2
@@ -61,6 +59,9 @@ autocmd FileType markdown setlocal colorcolumn=""
 au BufRead,BufNewFile .eslintrc setfiletype json
 au BufRead,BufNewFile .babelrc setfiletype json
 
+" Highlight current line but only in active window.
+au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+au WinLeave * setlocal nocursorline
 
 " Autoinstall vim-plug
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
