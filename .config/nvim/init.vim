@@ -18,6 +18,8 @@ set laststatus=2
 " Show line and column numbers.
 set ruler
 set wildmenu
+" Show partial command in bottom right corner.
+set showcmd
 " Show at least 1 more line after the current line.
 set scrolloff=1
 " Scroll horizontally by 1 column at a time.
@@ -54,6 +56,11 @@ autocmd FileType markdown setlocal wrap
 
 " Disable column color in markdown files
 autocmd FileType markdown setlocal colorcolumn=""
+
+" Set JSON filetype to files Vim doesn’t know about.
+au BufRead,BufNewFile .eslintrc setfiletype json
+au BufRead,BufNewFile .babelrc setfiletype json
+
 
 " Autoinstall vim-plug
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
@@ -197,7 +204,7 @@ let s:eslint_exe = substitute(s:eslint_path, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', ''
 let g:neomake_javascript_eslint_exe = s:eslint_exe
 let g:neomake_jsx_eslint_exe = s:eslint_exe
 
-autocmd BufWritePost,BufEnter * :Neomake
+autocmd BufWritePost * :Neomake
 
 map <space> <Plug>(easymotion-prefix)
 
@@ -221,8 +228,14 @@ nmap <Esc><Esc> <Plug>(anzu-clear-search-status)
 nmap ]l :lnext<CR>
 nmap [l :lprev<CR>
 
+" Insert newline when pressing Enter in normal mode.
+nmap <CR> i<CR><ESC>
+
 " Copy file path
-nmap cp :let @* = expand("%:p")
+cmap cp let @* = expand("%:p")
+
+" Change working directory to that of the current file.
+cmap cwd lcd %:p:h
 
 " Disable Ex mode binding
 nnoremap Q <nop>
@@ -264,22 +277,24 @@ nnoremap <NUL> i
 " Escape insert mode with Ctrl-C, just like exiting command mode.
 inoremap <C-C> <Esc>
 
-" Remove search highlighting, reload file, fix sytax highlighting, redraw screen
-nnoremap <C-L> :nohlsearch<CR>:edit<CR>:diffupdate<CR>:syntax sync fromstart<CR><C-L>
+" Remove search highlighting, reload file, lint, fix sytax highlighting, redraw screen
+nnoremap <C-L> :nohlsearch<CR>:edit<CR>:diffupdate<CR>:Neomake<CR>:syntax sync fromstart<CR><C-L>
 
 " Disable arrow keys to encourage faster movements.
 inoremap <Left>  <NOP>
 inoremap <Right> <NOP>
 inoremap <Up>    <NOP>
 inoremap <Down>  <NOP>
-nnoremap <Left>  <NOP>
-nnoremap <Right> <NOP>
-nnoremap <Up>    <NOP>
-nnoremap <Down>  <NOP>
 cnoremap <Left>  <NOP>
 cnoremap <Right> <NOP>
 cnoremap <Up>    <NOP>
 cnoremap <Down>  <NOP>
+
+" In normal mode make them resize windows.
+nnoremap <Left> :vertical resize +1<CR>
+nnoremap <Right> :vertical resize -1<CR>
+nnoremap <Up> :resize -1<CR>
+nnoremap <Down> :resize +1<CR>
 
 " Common mistyped commands.
 command W w
