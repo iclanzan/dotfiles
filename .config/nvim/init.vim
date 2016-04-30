@@ -45,6 +45,8 @@ set ttimeoutlen=0
 set updatetime=250
 " Do not restore options when restoring a session.
 set sessionoptions-=options
+" Disable intro message.
+set shortmess=I
 
 " Enable spell checker for markdown files
 autocmd FileType markdown setlocal spell
@@ -74,7 +76,6 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'jszakmeister/vim-togglecursor'
 Plug 'morhetz/gruvbox'
-Plug 'mhinz/vim-startify'
 Plug 'vim-airline/vim-airline'
 Plug 'osyo-manga/vim-anzu'
 Plug 'Lokaltog/vim-easymotion'
