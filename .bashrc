@@ -88,7 +88,7 @@ elif [[ $os_name == "Linux" ]]; then
 fi
 
 # Editor
-export NVIM_TUI_ENABLE_TRUE_COLOR=1 
+export NVIM_TUI_ENABLE_TRUE_COLOR=1
 export EDITOR='nvim'
 
 alias vim='nvim'
@@ -113,10 +113,6 @@ export FZF_DEFAULT_OPTS='--color 16'
 
 # Add home bin to PATH
 [[ -d $HOME/bin ]] && PATH=$PATH:$HOME/bin
-
-code () {
-  VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args $*
-}
 
 source ~/.bash_prompt
 
