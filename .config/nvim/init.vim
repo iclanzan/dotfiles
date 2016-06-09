@@ -102,6 +102,7 @@ Plug 'tpope/vim-surround'
 " Plug 'Yggdroot/indentLine'
 Plug 'mxw/vim-jsx'
 Plug 'junegunn/goyo.vim'
+Plug 'SirVer/ultisnips'
 
 call plug#end()
 
@@ -134,6 +135,13 @@ function! s:ProjectFiles()
 endfunction
 com! ProjectFiles
   \ call s:ProjectFiles()
+
+" Configure UltiSnips
+let g:UltiSnipsEditSplit = 'vertical'
+let g:UltiSnipsSnippetsDir="~/.config/nvim/UltiSnips"
+" Do not look for SnipMate files.
+let g:UltiSnipsEnableSnipMate = 0
+
 
 nnoremap <C-P> :<C-U>ProjectFiles<CR>
 nnoremap <C-K> :<C-U>Buffers<CR>
