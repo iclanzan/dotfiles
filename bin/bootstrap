@@ -20,6 +20,7 @@ declare -ra TAPS=(
 
 declare -ra FORMULAE=(
   'bash'
+  'bash-completion'
   'git'
   'fzf'
   'mutt'

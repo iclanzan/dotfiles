@@ -116,6 +116,9 @@ export FZF_DEFAULT_OPTS='--color 16'
 
 source ~/.bash_prompt
 
+BASH_COMPLETION_PATH=$(brew --prefix)/etc/bash_completion
+[ -f $BASH_COMPLETION_PATH ] && source $BASH_COMPLETION_PATH
+
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 export NVM_DIR="$HOME/.nvm"
