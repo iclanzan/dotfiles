@@ -1,0 +1,16 @@
+[filter "lfs"]
+	clean = git-lfs clean %f
+	smudge = git-lfs smudge %f
+	required = true
+[merge]
+	tool = nvimmerge
+[mergetool]
+  prompt = true
+[mergetool "nvimmerge"]
+  cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+[diff]
+  tool = nvimdiff
+[difftool]
+  prompt = false
+[difftool "nvimdiff"]
+  cmd = nvim -d $LOCAL $REMOTE
