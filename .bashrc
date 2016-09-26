@@ -75,6 +75,9 @@ fi
 # On a new machine: git clone --separate-git-dir=~/.dotfiles /path/to/repo ~
 alias dotfiles='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
+# Git
+alias gnew="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative HEAD..dev"
+
 # Colors!
 export TERM="xterm-color"
 
@@ -88,7 +91,6 @@ elif [[ $os_name == "Linux" ]]; then
 fi
 
 # Editor
-export NVIM_TUI_ENABLE_TRUE_COLOR=1
 export EDITOR='nvim'
 
 alias vim='nvim'
@@ -123,3 +125,25 @@ BASH_COMPLETION_PATH=$(brew --prefix)/etc/bash_completion
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
+# Load fzf with all commits from current repo.
+fshow() {
+  local out shas sha q k
+  while out=$(
+      git log --graph --color=always \
+          --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
+      fzf --ansi --multi --no-sort --reverse --query="$q" --tiebreak=index \
+          --print-query --expect=ctrl-d --toggle-sort=\`); do
+    q=$(head -1 <<< "$out")
+    k=$(head -2 <<< "$out" | tail -1)
+    shas=$(sed '1,2d;s/^[^a-z0-9]*//;/^$/d' <<< "$out" | awk '{print $1}')
+    [ -z "$shas" ] && continue
+    if [ "$k" = 'ctrl-d' ]; then
+      git diff --color=always $shas | less -R
+    else
+      for sha in $shas; do
+        git show --color=always $sha | less -R
+      done
+    fi
+  done
+}

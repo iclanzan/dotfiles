@@ -1,3 +1,5 @@
+" Enable true color
+set termguicolors
 set number
 set relativenumber
 " Let themes know we are using a dark background
@@ -18,8 +20,8 @@ set ruler
 set wildmenu
 " Show partial command in bottom right corner.
 set showcmd
-" Show at least 1 more line after the current line.
-set scrolloff=1
+" Show at least 2 more lines after the current line.
+set scrolloff=2
 " Scroll horizontally by 1 column at a time.
 set sidescroll=1
 " Start scrolling horizontally when 1 column away from the edge.
@@ -47,6 +49,8 @@ set updatetime=250
 set sessionoptions-=options
 " Disable intro message.
 set shortmess=I
+" Diff options.
+set diffopt=filler,vertical
 
 " Enable spell checker for markdown files
 autocmd FileType markdown setlocal spell
@@ -99,10 +103,12 @@ Plug 'tomtom/tcomment_vim'
 Plug 'maxbrunsfeld/vim-yankstack'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
+Plug 'rhysd/clever-f.vim'
 " Plug 'Yggdroot/indentLine'
 Plug 'mxw/vim-jsx'
 Plug 'junegunn/goyo.vim'
 Plug 'SirVer/ultisnips'
+Plug 'metakirby5/codi.vim'
 
 call plug#end()
 

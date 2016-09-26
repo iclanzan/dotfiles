@@ -2,6 +2,9 @@
 	clean = git-lfs clean %f
 	smudge = git-lfs smudge %f
 	required = true
+[user]
+	name = Sorin Iclanzan
+	email = sorin@iclanzan.com
 [merge]
 	tool = nvimmerge
 [mergetool]
