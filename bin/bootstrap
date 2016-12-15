@@ -36,6 +36,7 @@ declare -ra CASKS=(
   'gimp'
   'google-chrome'
   'iterm2-beta'
+  'kap'
   'keka'
   'licecap'
   'skype'
