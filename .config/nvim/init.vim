@@ -78,6 +78,7 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
+Plug 'jaawerth/nrun.vim'
 Plug 'jszakmeister/vim-togglecursor'
 Plug 'morhetz/gruvbox'
 Plug 'vim-airline/vim-airline'
@@ -211,14 +212,14 @@ let g:airline_symbols.readonly = ''
 " Make EditorConfig play nice with Fugitive
 let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 
-let g:neomake_javascript_enabled_makers = ['eslint']
+let g:neomake_haskell_enabled_makers = ['ghcmod']
+let g:neomake_javascript_enabled_makers = ['standard', 'eslint']
 let g:neomake_jsx_enabled_makers = ['eslint']
 
-" Use local eslint.
-let s:eslint_path = '/Users/sorin/Workspace/webflow/node_modules/.bin/eslint'
-let s:eslint_exe = substitute(s:eslint_path, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
-let g:neomake_javascript_eslint_exe = s:eslint_exe
-let g:neomake_jsx_eslint_exe = s:eslint_exe
+" Use local executables when found.
+autocmd BufEnter *.js let b:neomake_javascript_standard_exe = nrun#Which('standard')
+autocmd BufEnter *.js let b:neomake_javascript_eslint_exe = nrun#Which('eslint')
+autocmd BufEnter *.jsx let b:neomake_jsx_eslint_exe = nrun#Which('eslint')
 
 autocmd BufWritePost * :Neomake
 
@@ -228,6 +229,9 @@ map <space> <Plug>(easymotion-prefix)
 map <Tab> <C-W>W
 
 let mapleader=","
+
+nmap <leader>] :lnext<CR>
+nmap <leader>[ :lprev<CR>
 
 nmap <leader>p <Plug>yankstack_substitute_older_paste
 nmap <leader>P <Plug>yankstack_substitute_newer_paste
@@ -243,9 +247,6 @@ nmap <Esc><Esc> <Plug>(anzu-clear-search-status)
 " Next previous location (usually lines with errors)
 nmap ]l :lnext<CR>
 nmap [l :lprev<CR>
-
-" Insert newline when pressing Enter in normal mode.
-nmap <CR> i<CR><ESC>
 
 " Copy file path
 cmap cp let @* = expand("%:p")
