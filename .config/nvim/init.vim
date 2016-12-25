@@ -99,7 +99,7 @@ Plug 'pangloss/vim-javascript'
 Plug 'groenewege/vim-less'
 Plug 'benekastah/neomake'
 Plug 'editorconfig/editorconfig-vim'
-Plug 'vifm/vifm.vim'
+Plug 'vifm/neovim-vifm'
 Plug 'tomtom/tcomment_vim'
 Plug 'maxbrunsfeld/vim-yankstack'
 Plug 'tpope/vim-fugitive'
@@ -153,8 +153,6 @@ let g:UltiSnipsEnableSnipMate = 0
 nnoremap <C-P> :<C-U>ProjectFiles<CR>
 nnoremap <C-K> :<C-U>Buffers<CR>
 nnoremap <C-J> :<C-U>AgProj<Space>
-
-let g:vifm_exec_args = '-c "set tuioptions=p"'
 
 let g:signify_vcs_list = ['git']
 
@@ -235,8 +233,6 @@ nmap <leader>[ :lprev<CR>
 
 nmap <leader>p <Plug>yankstack_substitute_older_paste
 nmap <leader>P <Plug>yankstack_substitute_newer_paste
-
-" map <C-\> :NERDTreeToggle<CR>
 
 nmap n <Plug>(anzu-n-with-echo)
 nmap N <Plug>(anzu-N-with-echo)
@@ -329,7 +325,7 @@ endfunction
 
 autocmd! User FzfStatusLine call <SID>fzf_statusline()
 
-nnoremap <C-\> :<C-U>vsplit \| EditVifm<CR>
+nnoremap <C-\> :Vifm %:p:h<CR>
 
 " JavaScript goodness
 autocmd FileType javascript inoremap (; ();<Esc>hi
