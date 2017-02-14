@@ -32,6 +32,7 @@ declare -ra FORMULAE=(
 )
 
 declare -ra CASKS=(
+  'etcher'
   'firefox'
   'font-source-code-pro'
   'gimp'
