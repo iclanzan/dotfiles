@@ -25,17 +25,17 @@ set scrolloff=2
 " Scroll horizontally by 1 column at a time.
 set sidescroll=1
 " Start scrolling horizontally when 1 column away from the edge.
-set sidescrolloff=1
+set sidescrolloff=2
 " Character displayed between vertical window splits
 set fillchars="vert: "
 " Display long lines
 set display+=lastline
 " Don’t break in the middle of words when wrapping long lines
 set linebreak
+" Allow positioning cursor where there is no character in Visual Block mode.
+set virtualedit=block
 " Delete comment characters when joining lines.
 set formatoptions+=j
-" Highlight column 81.
-set colorcolumn=81
 " Disable highlighting very long lines for performance reasons.
 set synmaxcol=160
 " Update buffer when Vim thinks file contents might have changed from outside.
@@ -51,6 +51,8 @@ set sessionoptions-=options
 set shortmess=I
 " Diff options.
 set diffopt=filler,vertical
+" Don’t show mode(Insert, Visual, etc.). Airline provides that already.
+set noshowmode
 
 " Enable spell checker for markdown files
 autocmd FileType markdown setlocal spell
@@ -90,13 +92,13 @@ Plug 'PeterRincker/vim-argumentative'
 Plug 'Raimondi/delimitMate'
 Plug 'terryma/vim-expand-region'
 Plug 'ervandew/supertab'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'elzr/vim-json'
 Plug 'junegunn/vim-easy-align'
 Plug 'mhinz/vim-signify'
 Plug 'pangloss/vim-javascript'
-Plug 'groenewege/vim-less'
 Plug 'benekastah/neomake'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'vifm/neovim-vifm'
@@ -104,12 +106,13 @@ Plug 'tomtom/tcomment_vim'
 Plug 'maxbrunsfeld/vim-yankstack'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
-Plug 'rhysd/clever-f.vim'
-" Plug 'Yggdroot/indentLine'
 Plug 'mxw/vim-jsx'
 Plug 'junegunn/goyo.vim'
 Plug 'SirVer/ultisnips'
 Plug 'metakirby5/codi.vim'
+Plug 'ternjs/tern_for_vim', { 'for': ['javascript', 'javascript.jsx'] }
+Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'] }
+Plug 'yuttie/comfortable-motion.vim'
 
 call plug#end()
 
@@ -143,12 +146,26 @@ endfunction
 com! ProjectFiles
   \ call s:ProjectFiles()
 
+" Not using external editorconfig executable causes slow startup.
+let g:EditorConfig_core_mode = 'external_command'
+
 " Configure UltiSnips
 let g:UltiSnipsEditSplit = 'vertical'
 let g:UltiSnipsSnippetsDir="~/.config/nvim/UltiSnips"
 " Do not look for SnipMate files.
 let g:UltiSnipsEnableSnipMate = 0
 
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#omni#functions = {}
+let g:deoplete#omni#functions.javascript = [
+  \ 'tern#Complete',
+\]
+set completeopt=longest,menu
+let g:deoplete#sources = {}
+let g:deoplete#sources['javascript.jsx'] = ['ultisnips', 'ternjs']
+
+let g:tern#command = ["tern"]
+let g:tern#arguments = ["--persistent", "--no-port-file"]
 
 nnoremap <C-P> :<C-U>ProjectFiles<CR>
 nnoremap <C-K> :<C-U>Buffers<CR>
@@ -170,18 +187,47 @@ colorscheme gruvbox
 
 highlight link SignifySignChange GruvboxYellowSign
 
+highlight jsonQuote guifg='#504945'
+
 highlight Cursors guibg='#458588' guifg='#ebdbb2'
 highlight link multiple_cursors_cursor Cursors
 highlight link CtrlPPrtCursor Cursors
 " Make terminal cursor red to distinguish from edit cursor.
 highlight TermCursor guifg='#fb4934'
+" Hide tildes at end of buffer.
+highlight EndOfBuffer guifg=bg
+
+" Mark text that extends beyond 80 characters in these file types.
+let g:overLengthFileTypes = [
+  \ 'javascript',
+  \ 'json'
+  \ ]
+
+function! s:UpdateOverLengthMatch()
+  if &readonly || (index(g:overLengthFileTypes, &ft) < 0)
+    return
+  endif
+
+  highlight OverLength guifg='#ebdbb2' guibg='#cc241d'
+
+  if !exists('w:overLengthMatch')
+    let w:overLengthMatch = matchadd('OverLength', '\%>80v.\+', -1)
+  endif
+endfunction
+
+augroup overLength
+  autocmd!
+  autocmd WinEnter,BufEnter,BufRead,FileType * call s:UpdateOverLengthMatch()
+augroup END
 
 " Disable trailing whitespace detection; it slows down editor
 let g:airline#extensions#whitespace#enabled = 0
 
+let g:airline#extensions#default#section_truncate_width = {}
+
 let g:airline#extensions#default#layout = [
       \ [ 'a', 'b', 'c' ],
-      \ [ 'x', 'z', 'warning' ]
+      \ [ 'x', 'z', 'error', 'warning' ]
       \ ]
 
 let g:airline_mode_map = {
@@ -215,7 +261,7 @@ let g:neomake_javascript_enabled_makers = ['standard', 'eslint']
 let g:neomake_jsx_enabled_makers = ['eslint']
 
 " Use local executables when found.
-autocmd BufEnter *.js let b:neomake_javascript_standard_exe = nrun#Which('standard')
+" autocmd BufEnter *.js let b:neomake_javascript_standard_exe = nrun#Which('standard')
 autocmd BufEnter *.js let b:neomake_javascript_eslint_exe = nrun#Which('eslint')
 autocmd BufEnter *.jsx let b:neomake_jsx_eslint_exe = nrun#Which('eslint')
 
@@ -234,10 +280,10 @@ nmap <leader>[ :lprev<CR>
 nmap <leader>p <Plug>yankstack_substitute_older_paste
 nmap <leader>P <Plug>yankstack_substitute_newer_paste
 
-nmap n <Plug>(anzu-n-with-echo)
-nmap N <Plug>(anzu-N-with-echo)
-nmap * <Plug>(anzu-star-with-echo)
-nmap # <Plug>(anzu-sharp-with-echo)
+nmap n <Plug>(anzu-n)
+nmap N <Plug>(anzu-N)
+nmap * <Plug>(anzu-star)
+nmap # <Plug>(anzu-sharp)
 nmap <Esc><Esc> <Plug>(anzu-clear-search-status)
 
 " Next previous location (usually lines with errors)

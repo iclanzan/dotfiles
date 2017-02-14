@@ -102,6 +102,7 @@ export GREP_COLOR='1;32'
 
 # Pager
 export PAGER="less"
+export MANPAGER="nvim -c 'set ft=man' -"
 export LESS="-R"
 
 export LC_CTYPE=$LANG

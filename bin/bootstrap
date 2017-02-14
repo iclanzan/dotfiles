@@ -21,6 +21,7 @@ declare -ra TAPS=(
 declare -ra FORMULAE=(
   'bash'
   'bash-completion'
+  'editorconfig'
   'git'
   'fzf'
   'mutt'
@@ -38,6 +39,7 @@ declare -ra CASKS=(
   'iterm2-beta'
   'kap'
   'keka'
+  'hyper'
   'skype'
   'spectacle'
   'telegram'
